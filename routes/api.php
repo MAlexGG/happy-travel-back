@@ -28,6 +28,7 @@ Route::group(['middleware' => ['auth:sanctum']], function(){
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/destinations', [DestinationController::class, 'index']);
     Route::post('/destinations', [DestinationController::class, 'store']);
+    Route::get('/destination/{id}', [DestinationController::class, 'show']);
     Route::get('/mydestinations', [DestinationController::class, 'getAllDestinationsByUser']);
     Route::post('/destinations/fav/{id}', [DestinationController::class, 'isFavorite']);
     Route::post('/destinations/notfav/{id}', [DestinationController::class, 'isNotFavorite']);

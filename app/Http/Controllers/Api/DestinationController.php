@@ -57,7 +57,11 @@ class DestinationController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $destination = Destination::find($id);
+        if($destination) {
+            return response()->json($destination, 200);
+        } 
+        return response()->json(['msg' => 'No existe ese destino']);
     }
 
     /**

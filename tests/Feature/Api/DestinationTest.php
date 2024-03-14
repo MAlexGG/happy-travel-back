@@ -71,6 +71,39 @@ class DestinationTest extends TestCase
      }
 
      /**
+     * Should test auth user can see a destination
+     */
+    public function test_auth_user_can_see_a_destination()
+    {
+        $user = User::factory()->create();
+
+        Sanctum::actingAs($user);
+
+        $destination = Destination::factory()->create([
+            'location' => 'Nepal'
+        ]);
+
+        $response = $this->getJson('/api/destination/1');
+
+        $response->assertJsonFragment(['location' => 'Nepal']);
+    }
+
+    /**
+     * Should test auth user can't see a destination that does not exist
+     */
+    public function test_auth_user_cant_see_a_not_existing_destination()
+    {
+        $user = User::factory()->create();
+
+        Sanctum::actingAs($user);
+
+        $response = $this->getJson('/api/destination/1');
+
+        $response->assertJsonFragment(['msg' => 'No existe ese destino']);
+    }
+
+
+     /**
      * Should test user one to many relashionship with destination
      */
      /* public function test_auth_user_can_create_various_destinations()
