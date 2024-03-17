@@ -19,6 +19,7 @@ class DestinationFactory extends Factory
         return [
             'title' => fake()->name(),
             'location' => fake()->city(),
+            'image' => fake()->image()
         ];
     }
 }

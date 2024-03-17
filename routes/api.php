@@ -22,11 +22,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
-
+Route::get('/destinations', [DestinationController::class, 'index']);
 
 Route::group(['middleware' => ['auth:sanctum']], function(){
     Route::post('/logout', [AuthController::class, 'logout']);
-    Route::get('/destinations', [DestinationController::class, 'index']);
     Route::post('/destinations', [DestinationController::class, 'store']);
     Route::get('/destination/{id}', [DestinationController::class, 'show']);
     Route::delete('/destination/{id}', [DestinationController::class, 'destroy']);

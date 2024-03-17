@@ -36,6 +36,7 @@ class DestinationController extends Controller
         $request->validate([
             'title' => 'required|max:255',
             'location' => 'required|max:255',
+            'image' => 'required|image'
         ]);
 
         $user = Auth::user();
@@ -43,8 +44,15 @@ class DestinationController extends Controller
         $destination = Destination::create([
             'title' => $request->title,
             'location' => $request->location,
+            'image' => $request->image,
             'user_id' => $user->id
         ]);
+
+        if($request->hasFile('image')){
+            $destination['image'] = $request->file('image')->store('img', 'public');
+        }
+
+        $destination->save();
 
         return response()->json([
             'destination' => $destination,

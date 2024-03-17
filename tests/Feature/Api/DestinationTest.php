@@ -5,8 +5,11 @@ namespace Tests\Feature\Api;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\Destination;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Testing\Assert;
 
 class DestinationTest extends TestCase
 {
@@ -16,7 +19,7 @@ class DestinationTest extends TestCase
      * Should test get all destinations when method index has not middleware
      */
      
-    /* public function test_user_no_auth_can_see_all_destinations(): void
+    public function test_user_no_auth_can_see_all_destinations(): void
     {
         $this->withoutExceptionHandling();
 
@@ -26,24 +29,28 @@ class DestinationTest extends TestCase
 
         $response->assertJsonCount(1)
         ->assertStatus(200);
-    } */
+    }
 
 
     /**
      * Should test get all destinations when method index has middleware
      */
 
-    public function test_user_auth_can_see_all_destinations(): void
+    public function test_user_auth_can_see_all_own_destinations(): void
     {
         $this->withoutExceptionHandling();
 
-        $user = User::factory()->create();
+        $user = User::factory()->create([
+            'id' => 1
+        ]);
 
-        Destination::factory()->create();
+        Destination::factory()->create([
+            'user_id' => 1
+        ]);
 
         Sanctum::actingAs($user);
 
-        $response = $this->getJson('/api/destinations');
+        $response = $this->getJson('/api/mydestinations');
 
         $response->assertJsonCount(1)
         ->assertStatus(200);
@@ -60,14 +67,19 @@ class DestinationTest extends TestCase
 
         Sanctum::actingAs($user);
 
+        Storage::fake('public');
+        $file = UploadedFile::fake()->image('cadaques.jpg');
+
         $response = $this->postJson('/api/destinations', [
             'title' => 'Cadaqués',
-            'location' => 'Cataluña'
+            'location' => 'Cataluña',
+            'image' => $file
         ]);
 
         $response->assertStatus(201)
         ->assertJsonFragment(['user_id' => 1]);
         $this->assertEquals(1, $user->destinations->count());
+        Assert::assertFileExists(Storage::disk('public')->path('img/' . $file->hashName()));
      }
 
      /**

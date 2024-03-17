@@ -17,6 +17,7 @@ class DestinationSeeder extends Seeder
                 'id' => 1,
                 'title' => 'Tortuga Bay',
                 'location' => 'Galapagos Islands',
+                'image' => 'img/galapagos.jpg',
                 'user_id' => 1,
                 'created_at' => '2023/03/26'
             ],
@@ -24,6 +25,7 @@ class DestinationSeeder extends Seeder
                 'id' => 2,
                 'title' => 'Kamakura',
                 'location' => 'Japan',
+                'image' => 'img/kamakura.jpg',
                 'user_id' => 1,
                 'created_at' => '2023/03/26'
             ],
@@ -31,6 +33,7 @@ class DestinationSeeder extends Seeder
                 'id' => 3,
                 'title' => 'Tibidabo',
                 'location' => 'Barcelona',
+                'image' => 'img/tibidabo.jpg',
                 'user_id' => 2,
                 'created_at' => '2023/03/26'
             ]
