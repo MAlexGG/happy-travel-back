@@ -77,7 +77,14 @@ class DestinationController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $destination = Destination::find($id);
+        if($destination){
+            $destination->delete();
+            return response()->json([
+                'msg' => 'Destino borrado correctamente'
+            ], 200);
+        }
+        return response()->json(['msg' => 'Destino inexistente']);
     }
 
     /**

@@ -29,6 +29,7 @@ Route::group(['middleware' => ['auth:sanctum']], function(){
     Route::get('/destinations', [DestinationController::class, 'index']);
     Route::post('/destinations', [DestinationController::class, 'store']);
     Route::get('/destination/{id}', [DestinationController::class, 'show']);
+    Route::delete('/destination/{id}', [DestinationController::class, 'destroy']);
     Route::get('/mydestinations', [DestinationController::class, 'getAllDestinationsByUser']);
     Route::post('/destinations/fav/{id}', [DestinationController::class, 'isFavorite']);
     Route::post('/destinations/notfav/{id}', [DestinationController::class, 'isNotFavorite']);

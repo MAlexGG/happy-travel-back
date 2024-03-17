@@ -79,7 +79,7 @@ class DestinationTest extends TestCase
 
         Sanctum::actingAs($user);
 
-        $destination = Destination::factory()->create([
+        Destination::factory()->create([
             'location' => 'Nepal'
         ]);
 
@@ -100,6 +100,23 @@ class DestinationTest extends TestCase
         $response = $this->getJson('/api/destination/1');
 
         $response->assertJsonFragment(['msg' => 'No existe ese destino']);
+    }
+
+    /**
+     * Should test auth user can delete a destination
+     */
+    public function test_auth_user_can_delete_a_destination()
+    {
+        $user = User::factory()->create();
+
+        Sanctum::actingAs($user);
+
+        Destination::factory()->create();
+
+        $response = $this->deleteJson('/api/destination/1');
+
+        $response->assertJsonFragment(['msg' => 'Destino borrado correctamente']);
+        $this->assertCount(0, Destination::all());
     }
 
 
