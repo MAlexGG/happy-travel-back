@@ -119,16 +119,31 @@ class DestinationTest extends TestCase
      */
     public function test_auth_user_can_delete_a_destination()
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create(['id' => 1]);
 
         Sanctum::actingAs($user);
 
-        Destination::factory()->create();
+        Destination::factory()->create(['user_id' => 1]);
 
         $response = $this->deleteJson('/api/destination/1');
 
         $response->assertJsonFragment(['msg' => 'Destino borrado correctamente']);
         $this->assertCount(0, Destination::all());
+    }
+
+    public function test_auth_user_cannot_delete_a_destination_of_someone_else()
+    {
+        User::factory()->create(['id' => 1]);
+        $userNoAuth = User::factory()->create(['id' => 2]);
+
+        Sanctum::actingAs($userNoAuth);
+
+        Destination::factory()->create(['id' => 1, 'user_id' => 1]);
+
+        $response = $this->deleteJson('/api/destination/1');
+
+        $response->assertJsonFragment(['msg' => 'Destino inexistente']);
+        $this->assertCount(1, Destination::all());
     }
 
 

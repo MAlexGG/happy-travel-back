@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Destination;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 
 class DestinationController extends Controller
 {
@@ -85,8 +87,12 @@ class DestinationController extends Controller
      */
     public function destroy(string $id)
     {
-        $destination = Destination::find($id);
+        $user = Auth::user();
+        $destination = Destination::where('id', $id)->where('user_id', $user->id)->first();
+
         if($destination){
+            $file = public_path('storage\\' . $destination->image);
+            File::delete($file);
             $destination->delete();
             return response()->json([
                 'msg' => 'Destino borrado correctamente'
