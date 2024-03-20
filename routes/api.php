@@ -29,7 +29,7 @@ Route::group(['middleware' => ['auth:sanctum']], function(){
     Route::post('/destinations', [DestinationController::class, 'store']);
     Route::get('/destination/{id}', [DestinationController::class, 'show']);
     Route::delete('/destination/{id}', [DestinationController::class, 'destroy']);
-    Route::get('/mydestinations', [DestinationController::class, 'getAllDestinationsByUser']);
+    Route::get('/destinations/dashboard', [DestinationController::class, 'getAllDestinationsOrderByUser']);
     Route::post('/destinations/fav/{id}', [DestinationController::class, 'isFavorite']);
     Route::post('/destinations/notfav/{id}', [DestinationController::class, 'isNotFavorite']);
 });

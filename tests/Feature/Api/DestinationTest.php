@@ -9,6 +9,7 @@ use Laravel\Sanctum\Sanctum;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Testing\Assert;
 
 class DestinationTest extends TestCase
@@ -36,24 +37,40 @@ class DestinationTest extends TestCase
      * Should test get all destinations when method index has middleware
      */
 
-    public function test_user_auth_can_see_all_own_destinations(): void
+    public function test_user_auth_can_see_own_destinations_first(): void //NO PASA EL TEST
     {
         $this->withoutExceptionHandling();
 
-        $user = User::factory()->create([
+        User::factory()->create([
             'id' => 1
         ]);
 
+        $user = User::factory()->create([
+            'id' => 2
+        ]); 
+
         Destination::factory()->create([
+            'id' => 1,
+            'title' => 'Islas Azores',
+            'location' => 'Portugal',
+            'image' => 'img/azores.jpg',
             'user_id' => 1
+        ]);
+
+        Destination::factory()->create([
+            'id' => 2,
+            'title' => 'Islas Galápagos',
+            'location' => 'Ecuador',
+            'image' => 'img/galapagos.jpg',
+            'user_id' => 2
         ]);
 
         Sanctum::actingAs($user);
 
-        $response = $this->getJson('/api/mydestinations');
+        $response = $this->getJson('/api/destinations/dashboard');
 
-        $response->assertJsonCount(1)
-        ->assertStatus(200);
+        $this->assertEquals(2 , $response[0]['user_id']); // El usuario autenticado debería ser el primero
+
     }
 
     /**

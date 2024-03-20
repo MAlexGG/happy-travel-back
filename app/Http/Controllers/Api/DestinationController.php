@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Destination;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 
 class DestinationController extends Controller
@@ -23,10 +22,15 @@ class DestinationController extends Controller
     /**
      * Get all destinations by user
      */
-    public function getAllDestinationsByUser()
+    public function getAllDestinationsOrderByUser()
     {
         $user = Auth::user();
-        $destinations = $user->destinations()->get();
+
+        $authUserDestinations = Destination::where('user_id', $user->id);
+        $noAuthUserDestinations = Destination::where('user_id', '!=' ,$user->id);
+
+        $destinations = $authUserDestinations->union($noAuthUserDestinations)->get();
+
         return response()->json($destinations);
     }
 
